@@ -48,6 +48,7 @@ import {
   X
 } from "lucide-react"
 import { useState } from "react"
+import ProjectCategoryDashboard from './project-category-dashboard'
 
 // Kanban Card Component
 function KanbanCard({ 
@@ -61,8 +62,8 @@ function KanbanCard({
 }) {
   return (
     <Card 
-      className={`mb-3 hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-blue-500 ${
-        selectedProject?.code === project.code ? 'bg-blue-50 border-l-blue-600' : ''
+      className={`mb-3 hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-[#800020] ${
+        selectedProject?.code === project.code ? 'bg-[#800020]/10 border-l-[#800020]' : ''
       }`}
       onClick={onClick}
     >
@@ -162,17 +163,17 @@ function DashboardHome() {
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-100 p-8 rounded-xl border border-blue-200">
-        <h1 className="text-3xl font-bold text-slate-900 mb-2">Chào mừng đến với DMDA System</h1>
+      <div className="bg-gradient-to-r from-[#800020]/10 to-[#800020]/20 p-8 rounded-xl border border-[#800020]/30">
+        <h1 className="text-3xl font-bold text-slate-900 mb-2">Chào Mừng Đến Với Hệ Thống Quản Lý Dự Án</h1>
         <p className="text-slate-600 text-lg">Hệ thống quản lý dự án và đấu thầu toàn diện</p>
         <div className="mt-6 flex space-x-4">
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+          <Button className="bg-[#800020] hover:bg-[#700018] text-white">
             <Plus className="w-4 h-4 mr-2" />
             Tạo Dự án Mới
           </Button>
-          <Button variant="outline" className="border-blue-300 text-blue-600 hover:bg-blue-50">
-            <BarChart3 className="w-4 h-4 mr-2" />
-            Xem Báo cáo
+          <Button variant="outline" className="border-[#800020]/30 text-[#800020] hover:bg-[#800020]/10">
+            <Eye className="w-4 h-4 mr-2" />
+            Xem Tất cả
           </Button>
         </div>
       </div>
@@ -183,14 +184,14 @@ function DashboardHome() {
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm font-medium text-slate-600">Tổng Dự án</CardTitle>
-              <FolderOpen className="w-4 h-4 text-blue-500" />
+              <FolderOpen className="w-4 h-4 text-[#800020]" />
             </div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-slate-900">156</div>
             <div className="text-sm text-green-600 font-medium">+12% so với tháng trước</div>
             <div className="h-2 bg-slate-200 mt-3 rounded-full overflow-hidden">
-              <div className="h-full w-3/4 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full" />
+              <div className="h-full w-3/4 bg-[#800020] rounded-full" />
             </div>
           </CardContent>
         </Card>
@@ -254,7 +255,7 @@ function DashboardHome() {
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-start space-x-3 p-3 bg-slate-50 rounded-lg">
-                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                <div className="w-2 h-2 bg-[#800020] rounded-full mt-2"></div>
                 <div className="flex-1">
                   <p className="text-sm font-medium">Dự án DT-2024-001 được tạo</p>
                   <p className="text-xs text-slate-500">15/01/2024 - Nguyễn Văn A</p>
@@ -289,7 +290,7 @@ function DashboardHome() {
                 <span className="text-sm text-slate-600">Dự án mới</span>
                 <div className="flex items-center space-x-2">
                   <div className="w-20 h-2 bg-slate-200 rounded-full overflow-hidden">
-                    <div className="h-full w-3/4 bg-blue-500 rounded-full"></div>
+                    <div className="h-full w-3/4 bg-[#800020] rounded-full"></div>
                   </div>
                   <span className="text-sm font-medium">12</span>
                 </div>
@@ -353,7 +354,7 @@ function ProjectsManagement({
             Hệ thống quản lý dự án và đấu thầu toàn diện cho việc theo dõi, phê duyệt và thực hiện các dự án.
           </p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-200">
+        <Button className="bg-[#800020] hover:bg-[#700018] text-white shadow-lg hover:shadow-xl transition-all duration-200">
           <Plus className="w-4 h-4 mr-2" />
           Tạo Dự án Mới
         </Button>
@@ -365,14 +366,14 @@ function ProjectsManagement({
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm font-medium text-slate-600">Tổng Dự án</CardTitle>
-              <FolderOpen className="w-4 h-4 text-blue-500" />
+              <FolderOpen className="w-4 h-4 text-[#800020]" />
             </div>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-slate-900">156</div>
             <div className="text-sm text-green-600 font-medium">+12% so với tháng trước</div>
             <div className="h-2 bg-slate-200 mt-3 rounded-full overflow-hidden">
-              <div className="h-full w-3/4 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full" />
+              <div className="h-full w-3/4 bg-[#800020] rounded-full" />
             </div>
           </CardContent>
         </Card>
@@ -450,13 +451,13 @@ function ProjectsManagement({
           <div className="flex items-center space-x-2">
             <button
               onClick={() => setSelectedView("list")}
-              className={`p-2 rounded-lg ${selectedView === "list" ? "bg-blue-100 text-blue-600" : "bg-slate-100 text-slate-600"}`}
+                              className={`p-2 rounded-lg ${selectedView === "list" ? "bg-[#800020]/20 text-[#800020]" : "bg-slate-100 text-slate-600"}`}
             >
               <FileText className="w-4 h-4" />
             </button>
             <button
               onClick={() => setSelectedView("kanban")}
-              className={`p-2 rounded-lg ${selectedView === "kanban" ? "bg-blue-100 text-blue-600" : "bg-slate-100 text-slate-600"}`}
+                              className={`p-2 rounded-lg ${selectedView === "kanban" ? "bg-[#800020]/20 text-[#800020]" : "bg-slate-100 text-slate-600"}`}
             >
               <BarChart3 className="w-4 h-4" />
             </button>
@@ -493,16 +494,16 @@ function ProjectsManagement({
                
                {/* Right side - Filters */}
                <div className="flex items-center space-x-4">
-                 <select className="px-3 py-2 border border-slate-300 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                 <select className="px-3 py-2 border border-slate-300 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#800020]">
                    <option value="2025">2025</option>
-                   <option value="2024" selected>2024</option>
+                   <option value="2024">2024</option>
                    <option value="2023">2023</option>
                    <option value="2022">2022</option>
                    <option value="2021">2021</option>
                    <option value="2020">2020</option>
                  </select>
                  
-                 <select className="px-3 py-2 border border-slate-300 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                 <select className="px-3 py-2 border border-slate-300 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#800020]">
                    <option value="">Tất cả</option>
                    <option value="investment">Dự án đầu tư</option>
                    <option value="procurement">Mua sắm tài sản</option>
@@ -510,7 +511,7 @@ function ProjectsManagement({
                    <option value="maintenance">Bảo trì</option>
                  </select>
                  
-                 <select className="px-3 py-2 border border-slate-300 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                 <select className="px-3 py-2 border border-slate-300 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#800020]">
                    <option value="">Tất cả</option>
                    <option value="new">Dự án mới</option>
                    <option value="existing">Dự án hiện có</option>
@@ -545,7 +546,7 @@ function ProjectsManagement({
                     onClick={() => onProjectClick(project)}
                   >
                     <TableCell>
-                      <div className="font-medium text-blue-600">{project.code}</div>
+                      <div className="font-medium text-[#800020]">{project.code}</div>
                       <Badge variant="outline" className="bg-green-100 text-green-700 border-green-200 text-xs">
                         {project.startDate.includes('2024') ? 'Mới' : 'Chuyển tiếp'}
                       </Badge>
@@ -580,7 +581,7 @@ function ProjectsManagement({
                           <Eye className="w-4 h-4 text-slate-600" />
                         </button>
                         <button className="p-1 hover:bg-slate-100 rounded">
-                          <Edit className="w-4 h-4 text-blue-600" />
+                          <Edit className="w-4 h-4 text-[#800020]" />
                         </button>
                         {project.status === 'Chờ phê duyệt' && (
                           <button className="p-1 hover:bg-slate-100 rounded">
@@ -679,7 +680,7 @@ function StockOrderTable() {
       <div className="flex items-center space-x-2">
         <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
           <div 
-            className="h-full bg-blue-500 rounded-full transition-all duration-300"
+            className="h-full bg-[#800020] rounded-full transition-all duration-300"
             style={{ width: `${percentage}%` }}
           />
         </div>
@@ -705,7 +706,7 @@ function StockOrderTable() {
               Filters
             </Button>
           </div>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+          <Button className="bg-[#800020] hover:bg-[#700018] text-white">
             <Plus className="w-4 h-4 mr-2" />
             + Order Stock
           </Button>
@@ -742,7 +743,7 @@ function StockOrderTable() {
             {orders.map((order) => (
               <TableRow key={order.id} className="hover:bg-gray-50">
                 <TableCell>
-                  <div className="font-medium text-blue-600">{order.id}</div>
+                  <div className="font-medium text-[#800020]">{order.id}</div>
                   <div className="text-sm text-gray-500">{order.items} items, {order.value}</div>
                 </TableCell>
                 <TableCell className="text-gray-700">{order.created}</TableCell>
@@ -792,8 +793,8 @@ function StockSummary() {
       <Card className="border-0 shadow-md">
         <CardContent className="p-6">
           <div className="flex items-center space-x-4">
-            <div className="p-3 bg-blue-100 rounded-full">
-              <Target className="w-8 h-8 text-blue-600" />
+            <div className="p-3 bg-[#800020]/20 rounded-full">
+              <Target className="w-8 h-8 text-[#800020]" />
             </div>
             <div>
               <p className="text-sm text-gray-600 mb-1">Total Asset Value</p>
@@ -946,7 +947,7 @@ export default function ProjectDashboard() {
       <aside className={`${sidebarCollapsed ? 'w-16' : 'w-64'} bg-white border-r border-slate-200 flex flex-col transition-all duration-300 shadow-sm`}>
         <div className="flex items-center justify-between p-4 border-b border-slate-200">
           {!sidebarCollapsed && (
-            <h2 className="text-lg font-bold text-slate-900">DMDA System</h2>
+            <h2 className="text-lg font-bold text-slate-900">Agribank</h2>
           )}
           <button
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
@@ -970,9 +971,10 @@ export default function ProjectDashboard() {
               <Home className={`w-5 h-5 flex-shrink-0 ${currentPage === "dashboard" ? 'text-blue-600' : 'text-slate-600'}`} />
               {!sidebarCollapsed && <span className={`text-sm ${currentPage === "dashboard" ? 'font-medium text-blue-700' : 'text-slate-700'}`}>Dashboard</span>}
             </div>
+
             <div 
               onClick={() => {
-                setCurrentPage("projects")
+                setCurrentPage("project-category")
                 setSelectedProject(null) // Close project details when switching pages
               }}
               className={`flex items-center p-3 rounded-lg transition-colors cursor-pointer ${sidebarCollapsed ? 'justify-center' : 'space-x-3'} ${
@@ -982,33 +984,70 @@ export default function ProjectDashboard() {
               <FolderOpen className={`w-5 h-5 flex-shrink-0 ${currentPage === "projects" ? 'text-blue-600' : 'text-slate-600'}`} />
               {!sidebarCollapsed && <span className={`text-sm ${currentPage === "projects" ? 'font-medium text-blue-700' : 'text-slate-700'}`}>Dự án</span>}
             </div>
+
             <div 
               onClick={() => {
-                setCurrentPage("clinic")
+                setCurrentPage("bidding-packages")
                 setSelectedProject(null) // Close project details when switching pages
               }}
               className={`flex items-center p-3 rounded-lg transition-colors cursor-pointer ${sidebarCollapsed ? 'justify-center' : 'space-x-3'} ${
-                currentPage === "clinic" ? 'bg-blue-50 border border-blue-200' : 'hover:bg-slate-50'
+                currentPage === "bidding-packages" ? 'bg-blue-50 border border-blue-200' : 'hover:bg-slate-50'
               }`}
             >
-              <Activity className={`w-5 h-5 flex-shrink-0 ${currentPage === "clinic" ? 'text-blue-600' : 'text-slate-600'}`} />
-              {!sidebarCollapsed && <span className={`text-sm ${currentPage === "clinic" ? 'font-medium text-blue-700' : 'text-slate-700'}`}>Clinic</span>}
+              <Gavel className={`w-5 h-5 flex-shrink-0 ${currentPage === "bidding-packages" ? 'text-blue-600' : 'text-slate-600'}`} />
+              {!sidebarCollapsed && <span className={`text-sm ${currentPage === "bidding-packages" ? 'font-medium text-blue-700' : 'text-slate-700'}`}>Gói thầu</span>}
             </div>
-            <div className={`flex items-center p-3 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer ${sidebarCollapsed ? 'justify-center' : 'space-x-3'}`}>
-              <Gavel className="w-5 h-5 text-slate-600 flex-shrink-0" />
-              {!sidebarCollapsed && <span className="text-sm text-slate-700">Đấu thầu</span>}
+
+            <div 
+              onClick={() => {
+                setCurrentPage("contracts")
+                setSelectedProject(null) // Close project details when switching pages
+              }}
+              className={`flex items-center p-3 rounded-lg transition-colors cursor-pointer ${sidebarCollapsed ? 'justify-center' : 'space-x-3'} ${
+                currentPage === "contracts" ? 'bg-[#800020]/10 border border-[#800020]/20' : 'hover:bg-slate-50'
+              }`}
+            >
+              <FileText className={`w-5 h-5 flex-shrink-0 ${currentPage === "contracts" ? 'text-[#800020]' : 'text-slate-600'}`} />
+              {!sidebarCollapsed && <span className={`text-sm ${currentPage === "contracts" ? 'font-medium text-[#800020]' : 'text-slate-700'}`}>Hợp đồng</span>}
             </div>
-            <div className={`flex items-center p-3 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer ${sidebarCollapsed ? 'justify-center' : 'space-x-3'}`}>
-              <Users className="w-5 h-5 text-slate-600 flex-shrink-0" />
-              {!sidebarCollapsed && <span className="text-sm text-slate-700">Nhân sự</span>}
+
+            <div 
+              onClick={() => {
+                setCurrentPage("costs")
+                setSelectedProject(null) // Close project details when switching pages
+              }}
+              className={`flex items-center p-3 rounded-lg transition-colors cursor-pointer ${sidebarCollapsed ? 'justify-center' : 'space-x-3'} ${
+                currentPage === "costs" ? 'bg-[#800020]/10 border border-[#800020]/20' : 'hover:bg-slate-50' 
+              }`}
+            >
+              <DollarSign className={`w-5 h-5 flex-shrink-0 ${currentPage === "costs" ? 'text-[#800020]' : 'text-slate-600'}`} />
+              {!sidebarCollapsed && <span className={`text-sm ${currentPage === "costs" ? 'font-medium text-[#800020]' : 'text-slate-700'}`}>Chi phí</span>}
             </div>
-            <div className={`flex items-center p-3 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer ${sidebarCollapsed ? 'justify-center' : 'space-x-3'}`}>
-              <BarChart3 className="w-5 h-5 text-slate-600 flex-shrink-0" />
-              {!sidebarCollapsed && <span className="text-sm text-slate-700">Báo cáo</span>}
+
+            <div 
+              onClick={() => {
+                setCurrentPage("assets-services")
+                setSelectedProject(null) // Close project details when switching pages
+              }}
+              className={`flex items-center p-3 rounded-lg transition-colors cursor-pointer ${sidebarCollapsed ? 'justify-center' : 'space-x-3'} ${
+                currentPage === "assets-services" ? 'bg-[#800020]/10 border border-[#800020]/20' : 'hover:bg-slate-50'
+              }`}
+            >
+              <Package className={`w-5 h-5 flex-shrink-0 ${currentPage === "assets-services" ? 'text-[#800020]' : 'text-slate-600'}`} />
+              {!sidebarCollapsed && <span className={`text-sm ${currentPage === "assets-services" ? 'font-medium text-[#800020]' : 'text-slate-700'}`}>Tài sản & dịch vụ</span>}
             </div>
-            <div className={`flex items-center p-3 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer ${sidebarCollapsed ? 'justify-center' : 'space-x-3'}`}>
-              <Settings className="w-5 h-5 text-slate-600 flex-shrink-0" />
-              {!sidebarCollapsed && <span className="text-sm text-slate-700">Cài đặt</span>}
+
+            <div 
+              onClick={() => {
+                setCurrentPage("reports")
+                setSelectedProject(null) // Close project details when switching pages
+              }}
+              className={`flex items-center p-3 rounded-lg transition-colors cursor-pointer ${sidebarCollapsed ? 'justify-center' : 'space-x-3'} ${
+                currentPage === "reports" ? 'bg-[#800020]/10 border border-[#800020]/20' : 'hover:bg-slate-50'
+              }`}
+            >
+              <BarChart3 className={`w-5 h-5 flex-shrink-0 ${currentPage === "reports" ? 'text-[#800020]' : 'text-slate-600'}`} />
+              {!sidebarCollapsed && <span className={`text-sm ${currentPage === "reports" ? 'font-medium text-[#800020]' : 'text-slate-700'}`}>Báo cáo</span>}
             </div>
           </div>
         </nav>
@@ -1019,16 +1058,40 @@ export default function ProjectDashboard() {
         {/* Breadcrumb + Header */}
         <div className="text-sm text-slate-500 mb-4 flex items-center space-x-2">
           <span>Dashboard</span>
-          {currentPage === "projects" && (
+          {currentPage === "project-category" && (
             <>
               <span>/</span>
-              <span className="text-blue-600 font-medium">Quản lý Dự án</span>
+              <span className="text-[#800020] font-medium">Danh mục dự án</span>
             </>
           )}
-          {currentPage === "clinic" && (
+          {currentPage === "bidding-packages" && (
             <>
               <span>/</span>
-              <span className="text-blue-600 font-medium">Clinic Management</span>
+              <span className="text-[#800020] font-medium">Gói thầu</span>
+            </>
+          )}
+          {currentPage === "contracts" && (
+            <>
+              <span>/</span>
+              <span className="text-[#800020] font-medium">Hợp đồng</span>
+            </>
+          )}
+          {currentPage === "costs" && (
+            <>
+              <span>/</span>
+              <span className="text-[#800020] font-medium">Chi phí</span>
+            </>
+          )}
+          {currentPage === "assets-services" && (
+            <>
+              <span>/</span>
+              <span className="text-[#800020] font-medium">Tài sản & dịch vụ</span>
+            </>
+          )}
+          {currentPage === "reports" && (
+            <>
+              <span>/</span>
+              <span className="text-[#800020] font-medium">Báo cáo</span>
             </>
           )}
         </div>
@@ -1036,54 +1099,40 @@ export default function ProjectDashboard() {
         {/* Render appropriate component based on current page */}
         {currentPage === "dashboard" ? (
           <DashboardHome />
-        ) : currentPage === "projects" ? (
-          <ProjectsManagement 
-            projects={projects} 
-            selectedView={selectedView} 
-            setSelectedView={setSelectedView}
-            onProjectClick={handleProjectClick}
-            selectedProject={selectedProject}
-          />
-        ) : currentPage === "clinic" ? (
-          <div className="space-y-6">
-            {/* Clinic Header */}
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">Clinic Management</h1>
-                <p className="text-gray-600 mt-1">Manage your clinic's operations and inventory</p>
-              </div>
-            </div>
-
-            {/* Clinic Navigation Tabs */}
-            <div className="border-b border-gray-200">
-              <Tabs defaultValue="stocks" className="w-full">
-                <TabsList className="grid w-full grid-cols-3 bg-gray-100 p-1 rounded-lg">
-                  <TabsTrigger value="stocks" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
-                    Stocks
-                  </TabsTrigger>
-                  <TabsTrigger value="patients" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
-                    Patients
-                  </TabsTrigger>
-                  <TabsTrigger value="appointments" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
-                    Appointments
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
-            </div>
-
-            {/* Clinic Content */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <StockSummary />
-              <div className="mt-6">
-                <StockOrderTable />
-              </div>
-            </div>
+        ) : currentPage === "project-category" ? (
+          <ProjectCategoryDashboard />
+        ) : currentPage === "bidding-packages" ? (
+          <div className="text-center py-20">
+            <h2 className="text-2xl font-bold text-slate-700 mb-4">Gói thầu</h2>
+            <p className="text-slate-600">Chức năng quản lý gói thầu đang được phát triển...</p>
           </div>
-        ) : null}
+        ) : currentPage === "contracts" ? (
+          <div className="text-center py-20">
+            <h2 className="text-2xl font-bold text-slate-700 mb-4">Hợp đồng</h2>
+            <p className="text-slate-600">Chức năng quản lý hợp đồng đang được phát triển...</p>
+          </div>
+        ) : currentPage === "costs" ? (
+          <div className="text-center py-20">
+            <h2 className="text-2xl font-bold text-slate-700 mb-4">Chi phí</h2>
+            <p className="text-slate-600">Chức năng quản lý chi phí đang được phát triển...</p>
+          </div>
+        ) : currentPage === "assets-services" ? (
+          <div className="text-center py-20">
+            <h2 className="text-2xl font-bold text-slate-700 mb-4">Tài sản & Dịch vụ</h2>
+            <p className="text-slate-600">Chức năng quản lý tài sản và dịch vụ đang được phát triển...</p>
+          </div>
+        ) : currentPage === "reports" ? (
+          <div className="text-center py-20">
+            <h2 className="text-2xl font-bold text-slate-700 mb-4">Báo cáo</h2>
+            <p className="text-slate-600">Chức năng báo cáo đang được phát triển...</p>
+          </div>
+        ) : (
+          <DashboardHome />
+        )}
       </main>
 
       {/* Project Details Modal - Show as centered popup with blurred background */}
-      {currentPage === "projects" && selectedProject && (
+      {currentPage === "project-category" && selectedProject && (
         <>
           {/* Backdrop/Overlay */}
           <div 
@@ -1184,7 +1233,7 @@ export default function ProjectDashboard() {
                   <h3 className="text-lg font-semibold text-slate-900 mb-3">Lịch sử hoạt động</h3>
                   <div className="space-y-3">
                     <div className="flex items-start space-x-3 p-3 bg-slate-50 rounded-lg">
-                      <div className="w-3 h-3 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <div className="w-3 h-3 bg-[#800020] rounded-full mt-2 flex-shrink-0"></div>
                       <div className="flex-1">
                         <p className="text-sm font-medium">Dự án được tạo</p>
                         <p className="text-xs text-slate-500">{selectedProject.startDate} - {selectedProject.manager}</p>
