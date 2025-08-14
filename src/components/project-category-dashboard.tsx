@@ -1479,75 +1479,87 @@ export default function ProjectCategoryDashboard() {
             <p className="text-sm text-slate-600">Kéo thả dự án giữa các cột để thay đổi trạng thái</p>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-7 gap-4">
-              {kanbanColumns.map((column) => (
-                <div key={column.id} className="space-y-4">
-                  {/* Column Header */}
-                  <div className="text-center p-3 rounded-lg" style={{ backgroundColor: `${column.color}20` }}>
-                    <h3 className="font-semibold text-sm" style={{ color: column.color }}>
-                      {column.title}
-                    </h3>
-                    <p className="text-xs text-slate-600 mt-1">
-                      {column.projects.length} dự án
-                    </p>
+            <div className="overflow-x-auto">
+              <div className="min-w-full">
+                <div className="grid grid-cols-[250px_1fr] gap-4">
+                  {/* Status Titles Column */}
+                  <div className="space-y-4">
+                    {kanbanColumns.map((column) => (
+                      <div key={column.id} className="text-center p-3 rounded-lg h-24 flex flex-col justify-center" style={{ backgroundColor: `${column.color}20` }}>
+                        <h3 className="font-semibold text-sm" style={{ color: column.color }}>
+                          {column.title}
+                        </h3>
+                        <p className="text-xs text-slate-600 mt-1">
+                          {column.projects.length} dự án
+                        </p>
+                      </div>
+                    ))}
                   </div>
                   
-                  {/* Project Cards */}
-                  <div className="space-y-3">
-                    {column.projects.map((project: any) => (
-                      <div
-                        key={project.id}
-                        className="bg-white p-3 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer"
-                        draggable={checkPermission('edit', project.id)}
-                        onDragStart={(e) => {
-                          e.dataTransfer.setData('text/plain', project.id.toString())
-                        }}
-                        onDragOver={(e) => e.preventDefault()}
-                        onDrop={(e) => {
-                          e.preventDefault()
-                          const projectId = parseInt(e.dataTransfer.getData('text/plain'))
-                          if (projectId !== project.id) {
-                            handleDragDrop(projectId, project.approval_status, column.id)
-                          }
-                        }}
-                      >
-                        <div className="space-y-2">
-                          <div className="font-mono font-bold text-xs text-[#800020]">
-                            {project.project_code}
-                          </div>
-                          <div className="text-xs font-medium text-slate-900 line-clamp-2">
-                            {project.name}
-                          </div>
-                          <div className="text-xs text-slate-600">
-                            {formatCurrency(project.planned_budget)}
-                          </div>
-                          <div className="flex items-center justify-between">
-                            {getProjectTypeLabel(project.category)}
-                            <div className="flex space-x-1">
-                              <button
-                                onClick={() => handleViewProjectDetails(project)}
-                                className="p-1 hover:bg-slate-100 rounded text-slate-600"
-                                title="Xem chi tiết"
-                              >
-                                <Eye className="w-3 h-3" />
-                              </button>
-                              {checkPermission('edit', project.id) && (
-                                <button
-                                  onClick={() => handleEditProject(project)}
-                                  className="p-1 hover:bg-slate-100 rounded text-[#800020]"
-                                  title="Chỉnh sửa"
-                                >
-                                  <Edit className="w-3 h-3" />
-                                </button>
-                              )}
+                  {/* Projects Row */}
+                  <div className="space-y-4">
+                    {kanbanColumns.map((column) => (
+                      <div key={column.id} className="h-24">
+                        <div className="flex gap-3 flex-wrap">
+                          {column.projects.map((project: any) => (
+                                                                 <div
+                                       key={project.id}
+                                       className="bg-white p-3 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer w-[220px] h-24"
+                              draggable={checkPermission('edit', project.id)}
+                              onDragStart={(e) => {
+                                e.dataTransfer.setData('text/plain', project.id.toString())
+                              }}
+                              onDragOver={(e) => e.preventDefault()}
+                              onDrop={(e) => {
+                                e.preventDefault()
+                                const projectId = parseInt(e.dataTransfer.getData('text/plain'))
+                                if (projectId !== project.id) {
+                                  handleDragDrop(projectId, project.approval_status, column.id)
+                                }
+                              }}
+                            >
+                              <div className="space-y-2 h-full flex flex-col justify-between">
+                                <div>
+                                  <div className="font-mono font-bold text-xs text-[#800020]">
+                                    {project.project_code}
+                                  </div>
+                                  <div className="text-xs font-medium text-slate-900 line-clamp-2">
+                                    {project.name}
+                                  </div>
+                                  <div className="text-xs text-slate-600">
+                                    {formatCurrency(project.planned_budget)}
+                                  </div>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  {getProjectTypeLabel(project.category)}
+                                  <div className="flex space-x-1">
+                                    <button
+                                      onClick={() => handleViewProjectDetails(project)}
+                                      className="p-1 hover:bg-slate-100 rounded text-slate-600"
+                                      title="Xem chi tiết"
+                                    >
+                                      <Eye className="w-3 h-3" />
+                                    </button>
+                                    {checkPermission('edit', project.id) && (
+                                      <button
+                                        onClick={() => handleEditProject(project)}
+                                        className="p-1 hover:bg-slate-100 rounded text-[#800020]"
+                                        title="Chỉnh sửa"
+                                      >
+                                        <Edit className="w-3 h-3" />
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
                             </div>
-                          </div>
+                          ))}
                         </div>
                       </div>
                     ))}
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
           </CardContent>
         </Card>
