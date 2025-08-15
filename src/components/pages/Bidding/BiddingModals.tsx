@@ -3,294 +3,257 @@
 import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { 
   Package, 
+  Globe, 
   FileText, 
-  Clock, 
-  CheckCircle, 
-  AlertCircle, 
+  Download, 
   X,
-  Calendar,
-  DollarSign,
-  User,
-  Building
+  Plus,
+  Edit,
+  Eye,
+  Trash2,
+  Send,
+  Award,
+  Save,
+  FolderOpen,
+  History
 } from "lucide-react"
 import { BiddingPackage, NewBiddingPackage } from "@/types/bidding"
-import { formatCurrency } from "@/lib/utils"
+import { CreateBiddingForm } from "./forms/CreateBiddingForm"
+import { EditBiddingForm } from "./forms/EditBiddingForm"
+import { DeleteBiddingForm } from "./forms/DeleteBiddingForm"
+import { DocumentManagementForm } from "./forms/DocumentManagementForm"
+import { ChangeHistoryForm } from "./forms/ChangeHistoryForm"
+import { TenderPortalIntegration } from "./forms/TenderPortalIntegration"
 
 interface BiddingModalsProps {
   showCreateModal: boolean
   showDetailsModal: boolean
+  showEditModal: boolean
+  showDeleteModal: boolean
+  showDocumentsModal: boolean
+  showHistoryModal: boolean
   showExportModal: boolean
   selectedPackage: BiddingPackage | null
   onCloseCreateModal: () => void
   onCloseDetailsModal: () => void
+  onCloseEditModal: () => void
+  onCloseDeleteModal: () => void
+  onCloseDocumentsModal: () => void
+  onCloseHistoryModal: () => void
   onCloseExportModal: () => void
   onCreatePackage: (data: NewBiddingPackage) => void
-  onUpdatePackage: (id: number, updates: Partial<BiddingPackage>) => void
+  onUpdatePackage: (id: number, data: Partial<BiddingPackage>) => void
+  onDeletePackage: (id: number, reason: string, forceDelete: boolean) => void
+}
+
+// Interface đơn giản cho danh sách dự án trong form
+interface ProjectOption {
+  id: number
+  name: string
 }
 
 export function BiddingModals({
   showCreateModal,
   showDetailsModal,
+  showEditModal,
+  showDeleteModal,
+  showDocumentsModal,
+  showHistoryModal,
   showExportModal,
   selectedPackage,
   onCloseCreateModal,
   onCloseDetailsModal,
+  onCloseEditModal,
+  onCloseDeleteModal,
+  onCloseDocumentsModal,
+  onCloseHistoryModal,
   onCloseExportModal,
   onCreatePackage,
-  onUpdatePackage
+  onUpdatePackage,
+  onDeletePackage
 }: BiddingModalsProps) {
-  const [createForm, setCreateForm] = useState<Partial<NewBiddingPackage>>({
-    name: "",
-    description: "",
-    project_id: 1,
-    estimated_value: 0,
-    contract_type: "construction",
-    bidding_method: "open",
-    priority: "medium",
-    department: "",
-    package_manager: "",
-    bidding_deadline: "",
-    evaluation_deadline: "",
-    notes: ""
-  })
+  const [activeTab, setActiveTab] = useState("create")
+  const [projects] = useState<ProjectOption[]>([
+    { id: 1, name: "Xây dựng trụ sở chính" },
+    { id: 2, name: "Nâng cấp hệ thống điện" },
+    { id: 3, name: "Hiện đại hóa công nghệ" }
+  ])
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'draft':
-        return <Badge variant="secondary" className="bg-gray-100 text-gray-700">Bản nháp</Badge>
-      case 'published':
-        return <Badge variant="default" className="bg-blue-100 text-blue-700">Đã công bố</Badge>
-      case 'bidding':
-        return <Badge variant="default" className="bg-orange-100 text-orange-700">Đang thầu</Badge>
-      case 'evaluating':
-        return <Badge variant="default" className="bg-purple-100 text-purple-700">Đánh giá</Badge>
-      case 'awarded':
-        return <Badge variant="default" className="bg-green-100 text-green-700">Đã trao thầu</Badge>
-      case 'cancelled':
-        return <Badge variant="destructive">Đã hủy</Badge>
-      default:
-        return <Badge variant="outline">{status}</Badge>
+  const handleCreatePackage = async (data: NewBiddingPackage) => {
+    try {
+      await onCreatePackage(data)
+      onCloseCreateModal()
+      setActiveTab("create")
+    } catch (error) {
+      console.error("Lỗi khi tạo gói thầu:", error)
     }
   }
 
-  const getPriorityBadge = (priority: string) => {
-    switch (priority) {
-      case 'low':
-        return <Badge variant="outline" className="text-green-600 border-green-200">Thấp</Badge>
-      case 'medium':
-        return <Badge variant="outline" className="text-yellow-600 border-yellow-200">Trung bình</Badge>
-      case 'high':
-        return <Badge variant="outline" className="text-orange-600 border-orange-200">Cao</Badge>
-      case 'urgent':
-        return <Badge variant="outline" className="text-red-600 border-red-200">Khẩn cấp</Badge>
-      default:
-        return <Badge variant="outline">{priority}</Badge>
+  const handleUpdatePackage = async (id: number, data: Partial<BiddingPackage>) => {
+    try {
+      await onUpdatePackage(id, data)
+      onCloseEditModal()
+    } catch (error) {
+      console.error("Lỗi khi cập nhật gói thầu:", error)
     }
   }
 
-  const getContractTypeLabel = (type: string) => {
-    switch (type) {
-      case 'construction': return 'Xây dựng'
-      case 'supply': return 'Cung cấp'
-      case 'service': return 'Dịch vụ'
-      case 'mixed': return 'Hỗn hợp'
-      default: return type
+  const handleDeletePackage = async (id: number, reason: string, forceDelete: boolean) => {
+    try {
+      await onDeletePackage(id, reason, forceDelete)
+      onCloseDeleteModal()
+    } catch (error) {
+      console.error("Lỗi khi xóa gói thầu:", error)
     }
   }
 
-  const getBiddingMethodLabel = (method: string) => {
-    switch (method) {
-      case 'open': return 'Mở thầu'
-      case 'limited': return 'Hạn chế'
-      case 'direct': return 'Chỉ định thầu'
-      case 'competitive': return 'Cạnh tranh'
-      default: return method
-    }
+  const handleSaveDraft = (data: Partial<NewBiddingPackage>) => {
+    console.log("Lưu nháp:", data)
+    // TODO: Implement save draft functionality
   }
 
-  const handleCreateSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (createForm.name && createForm.department && createForm.package_manager) {
-      onCreatePackage(createForm as NewBiddingPackage)
-      setCreateForm({
-        name: "",
-        description: "",
-        project_id: 1,
-        estimated_value: 0,
-        contract_type: "construction",
-        bidding_method: "open",
-        priority: "medium",
-        department: "",
-        package_manager: "",
-        bidding_deadline: "",
-        evaluation_deadline: "",
-        notes: ""
-      })
-    }
+  const handlePortalDataFetched = (data: any) => {
+    console.log("Dữ liệu từ Cổng thông tin:", data)
+    // TODO: Auto-fill form with portal data
+    setActiveTab("create")
+  }
+
+  const handleCloseCreateModal = () => {
+    onCloseCreateModal()
+    setActiveTab("create")
   }
 
   return (
     <>
-      {/* Create Modal */}
-      <Dialog open={showCreateModal} onOpenChange={onCloseCreateModal}>
-        <DialogContent className="max-w-2xl">
+      {/* Create/Edit Modal */}
+      <Dialog open={showCreateModal} onOpenChange={handleCloseCreateModal}>
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Package className="w-5 h-5" />
+              <Plus className="w-5 h-5" />
               Tạo gói thầu mới
             </DialogTitle>
           </DialogHeader>
-          
-          <form onSubmit={handleCreateSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="name">Tên gói thầu *</Label>
-                <Input
-                  id="name"
-                  value={createForm.name}
-                  onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
-                  placeholder="Nhập tên gói thầu"
-                  required
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="estimated_value">Giá trị ước tính *</Label>
-                <Input
-                  id="estimated_value"
-                  type="number"
-                  value={createForm.estimated_value}
-                  onChange={(e) => setCreateForm({ ...createForm, estimated_value: Number(e.target.value) })}
-                  placeholder="0"
-                  required
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="contract_type">Loại hợp đồng</Label>
-                <select
-                  id="contract_type"
-                  value={createForm.contract_type}
-                  onChange={(e) => setCreateForm({ ...createForm, contract_type: e.target.value as any })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-md"
-                >
-                  <option value="construction">Xây dựng</option>
-                  <option value="supply">Cung cấp</option>
-                  <option value="service">Dịch vụ</option>
-                  <option value="mixed">Hỗn hợp</option>
-                </select>
-              </div>
-              
-              <div>
-                <Label htmlFor="bidding_method">Phương thức thầu</Label>
-                <select
-                  id="bidding_method"
-                  value={createForm.bidding_method}
-                  onChange={(e) => setCreateForm({ ...createForm, bidding_method: e.target.value as any })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-md"
-                >
-                  <option value="open">Mở thầu</option>
-                  <option value="limited">Hạn chế</option>
-                  <option value="direct">Chỉ định thầu</option>
-                  <option value="competitive">Cạnh tranh</option>
-                </select>
-              </div>
-              
-              <div>
-                <Label htmlFor="priority">Độ ưu tiên</Label>
-                <select
-                  id="priority"
-                  value={createForm.priority}
-                  onChange={(e) => setCreateForm({ ...createForm, priority: e.target.value as any })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-md"
-                >
-                  <option value="low">Thấp</option>
-                  <option value="medium">Trung bình</option>
-                  <option value="high">Cao</option>
-                  <option value="urgent">Khẩn cấp</option>
-                </select>
-              </div>
-              
-              <div>
-                <Label htmlFor="department">Phòng ban *</Label>
-                <Input
-                  id="department"
-                  value={createForm.department}
-                  onChange={(e) => setCreateForm({ ...createForm, department: e.target.value })}
-                  placeholder="Nhập phòng ban"
-                  required
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="package_manager">Người quản lý *</Label>
-                <Input
-                  id="package_manager"
-                  value={createForm.package_manager}
-                  onChange={(e) => setCreateForm({ ...createForm, package_manager: e.target.value })}
-                  placeholder="Nhập tên người quản lý"
-                  required
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="bidding_deadline">Hạn nộp hồ sơ</Label>
-                <Input
-                  id="bidding_deadline"
-                  type="date"
-                  value={createForm.bidding_deadline}
-                  onChange={(e) => setCreateForm({ ...createForm, bidding_deadline: e.target.value })}
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="evaluation_deadline">Hạn đánh giá</Label>
-                <Input
-                  id="evaluation_deadline"
-                  type="date"
-                  value={createForm.evaluation_deadline}
-                  onChange={(e) => setCreateForm({ ...createForm, evaluation_deadline: e.target.value })}
-                />
-              </div>
-            </div>
-            
-            <div>
-              <Label htmlFor="description">Mô tả</Label>
-              <Textarea
-                id="description"
-                value={createForm.description}
-                onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
-                placeholder="Nhập mô tả gói thầu"
-                rows={3}
+
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="create" className="flex items-center gap-2">
+                <FileText className="w-4 h-4" />
+                Tạo thủ công
+              </TabsTrigger>
+              <TabsTrigger value="portal" className="flex items-center gap-2">
+                <Globe className="w-4 h-4" />
+                Từ Cổng thông tin
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="create" className="mt-6">
+              <CreateBiddingForm
+                projects={projects}
+                onSubmit={handleCreatePackage}
+                onSaveDraft={handleSaveDraft}
+                onCancel={handleCloseCreateModal}
               />
-            </div>
-            
-            <div>
-              <Label htmlFor="notes">Ghi chú</Label>
-              <Textarea
-                id="notes"
-                value={createForm.notes}
-                onChange={(e) => setCreateForm({ ...createForm, notes: e.target.value })}
-                placeholder="Nhập ghi chú (tùy chọn)"
-                rows={2}
+            </TabsContent>
+
+            <TabsContent value="portal" className="mt-6">
+              <TenderPortalIntegration
+                onDataFetched={handlePortalDataFetched}
+                onCancel={handleCloseCreateModal}
               />
-            </div>
-            
-            <div className="flex justify-end gap-3">
-              <Button type="button" variant="outline" onClick={onCloseCreateModal}>
-                Hủy
-              </Button>
-              <Button type="submit">
-                Tạo gói thầu
-              </Button>
-            </div>
-          </form>
+            </TabsContent>
+          </Tabs>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Modal */}
+      <Dialog open={showEditModal} onOpenChange={onCloseEditModal}>
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Edit className="w-5 h-5" />
+              Chỉnh sửa gói thầu
+            </DialogTitle>
+          </DialogHeader>
+
+          {selectedPackage && (
+            <EditBiddingForm
+              biddingPackage={selectedPackage}
+              projects={projects}
+              onSubmit={handleUpdatePackage}
+              onSaveDraft={(data) => handleSaveDraft(data)}
+              onCancel={onCloseEditModal}
+              onViewHistory={() => {
+                // TODO: Implement view history functionality
+                console.log("View history for package:", selectedPackage.id)
+              }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Modal */}
+      <Dialog open={showDeleteModal} onOpenChange={onCloseDeleteModal}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Trash2 className="w-5 h-5" />
+              Xóa gói thầu
+            </DialogTitle>
+          </DialogHeader>
+
+          {selectedPackage && (
+            <DeleteBiddingForm
+              biddingPackage={selectedPackage}
+              onConfirm={handleDeletePackage}
+              onCancel={onCloseDeleteModal}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Document Management Modal */}
+      <Dialog open={showDocumentsModal} onOpenChange={onCloseDocumentsModal}>
+        <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FolderOpen className="w-5 h-5" />
+              Quản lý tài liệu đính kèm
+            </DialogTitle>
+          </DialogHeader>
+
+          {selectedPackage && (
+            <DocumentManagementForm
+              biddingPackage={selectedPackage}
+              onClose={onCloseDocumentsModal}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Change History Modal */}
+      <Dialog open={showHistoryModal} onOpenChange={onCloseHistoryModal}>
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <History className="w-5 h-5" />
+              Lịch sử thay đổi
+            </DialogTitle>
+          </DialogHeader>
+
+          {selectedPackage && (
+            <ChangeHistoryForm
+              biddingPackage={selectedPackage}
+              onClose={onCloseHistoryModal}
+              onRollback={(changeId) => {
+                // TODO: Implement rollback functionality
+                console.log("Rollback change:", changeId)
+              }}
+            />
+          )}
         </DialogContent>
       </Dialog>
 
@@ -299,150 +262,139 @@ export function BiddingModals({
         <DialogContent className="max-w-4xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Package className="w-5 h-5" />
+              <Eye className="w-5 h-5" />
               Chi tiết gói thầu
             </DialogTitle>
           </DialogHeader>
-          
+
           {selectedPackage && (
             <div className="space-y-6">
-              {/* Header */}
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <h2 className="text-xl font-semibold text-slate-900 mb-2">
-                    {selectedPackage.name}
-                  </h2>
-                  <div className="flex items-center gap-3 mb-4">
-                    {getStatusBadge(selectedPackage.status)}
-                    {getPriorityBadge(selectedPackage.priority)}
-                    <Badge variant="outline">{selectedPackage.package_code}</Badge>
-                  </div>
+              {/* Basic Information */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-600">Mã gói thầu</label>
+                  <p className="text-sm font-medium">{selectedPackage.package_code}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600">Tên gói thầu</label>
+                  <p className="text-sm font-medium">{selectedPackage.name}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600">Dự án</label>
+                  <p className="text-sm font-medium">{selectedPackage.project_name}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600">Giá trị dự kiến</label>
+                  <p className="text-sm font-medium">
+                    {selectedPackage.estimated_value?.toLocaleString()} VND
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600">Trạng thái</label>
+                  <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                    selectedPackage.status === 'draft' ? 'bg-gray-100 text-gray-800' :
+                    selectedPackage.status === 'published' ? 'bg-blue-100 text-blue-800' :
+                    selectedPackage.status === 'bidding' ? 'bg-orange-100 text-orange-800' :
+                    selectedPackage.status === 'awarded' ? 'bg-green-100 text-green-800' :
+                    'bg-red-100 text-red-800'
+                  }`}>
+                    {selectedPackage.status === 'draft' ? 'Bản nháp' :
+                     selectedPackage.status === 'published' ? 'Đã công bố' :
+                     selectedPackage.status === 'bidding' ? 'Đang thầu' :
+                     selectedPackage.status === 'awarded' ? 'Đã trao thầu' :
+                     selectedPackage.status}
+                  </span>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-600">Mức độ ưu tiên</label>
+                  <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                    selectedPackage.priority === 'low' ? 'bg-green-100 text-green-800' :
+                    selectedPackage.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                    selectedPackage.priority === 'high' ? 'bg-orange-100 text-orange-800' :
+                    'bg-red-100 text-red-800'
+                  }`}>
+                    {selectedPackage.priority === 'low' ? 'Thấp' :
+                     selectedPackage.priority === 'medium' ? 'Trung bình' :
+                     selectedPackage.priority === 'high' ? 'Cao' :
+                     'Khẩn cấp'}
+                  </span>
                 </div>
               </div>
-              
-              {/* Details Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="font-medium text-slate-700 mb-2 flex items-center gap-2">
-                      <DollarSign className="w-4 h-4" />
-                      Thông tin tài chính
-                    </h3>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">Giá trị ước tính:</span>
-                        <span className="font-medium">{formatCurrency(selectedPackage.estimated_value)}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h3 className="font-medium text-slate-700 mb-2 flex items-center gap-2">
-                      <Building className="w-4 h-4" />
-                      Thông tin dự án
-                    </h3>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">Dự án:</span>
-                        <span className="font-medium">{selectedPackage.project_name}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">Loại hợp đồng:</span>
-                        <span className="font-medium">{getContractTypeLabel(selectedPackage.contract_type)}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">Phương thức thầu:</span>
-                        <span className="font-medium">{getBiddingMethodLabel(selectedPackage.bidding_method)}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="font-medium text-slate-700 mb-2 flex items-center gap-2">
-                      <User className="w-4 h-4" />
-                      Thông tin quản lý
-                    </h3>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">Người quản lý:</span>
-                        <span className="font-medium">{selectedPackage.package_manager}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">Phòng ban:</span>
-                        <span className="font-medium">{selectedPackage.department}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">Người tạo:</span>
-                        <span className="font-medium">{selectedPackage.created_by}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h3 className="font-medium text-slate-700 mb-2 flex items-center gap-2">
-                      <Calendar className="w-4 h-4" />
-                      Thời gian
-                    </h3>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">Ngày tạo:</span>
-                        <span className="font-medium">{new Date(selectedPackage.created_at).toLocaleDateString('vi-VN')}</span>
-                      </div>
-                      {selectedPackage.published_date && (
-                        <div className="flex justify-between">
-                          <span className="text-slate-600">Ngày công bố:</span>
-                          <span className="font-medium">{selectedPackage.published_date}</span>
-                        </div>
-                      )}
-                      {selectedPackage.bidding_deadline && (
-                        <div className="flex justify-between">
-                          <span className="text-slate-600">Hạn nộp hồ sơ:</span>
-                          <span className="font-medium">{selectedPackage.bidding_deadline}</span>
-                        </div>
-                      )}
-                      {selectedPackage.evaluation_deadline && (
-                        <div className="flex justify-between">
-                          <span className="text-slate-600">Hạn đánh giá:</span>
-                          <span className="font-medium">{selectedPackage.evaluation_deadline}</span>
-                        </div>
-                      )}
-                      {selectedPackage.award_date && (
-                        <div className="flex justify-between">
-                          <span className="text-slate-600">Ngày trao thầu:</span>
-                          <span className="font-medium">{selectedPackage.award_date}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Description */}
+
               {selectedPackage.description && (
                 <div>
-                  <h3 className="font-medium text-slate-700 mb-2">Mô tả</h3>
-                  <p className="text-sm text-slate-600 bg-slate-50 p-3 rounded-md">
-                    {selectedPackage.description}
-                  </p>
+                  <label className="text-sm font-medium text-gray-600">Mô tả</label>
+                  <p className="text-sm mt-1">{selectedPackage.description}</p>
                 </div>
               )}
-              
-              {/* Notes */}
-              {selectedPackage.notes && (
-                <div>
-                  <h3 className="font-medium text-slate-700 mb-2">Ghi chú</h3>
-                  <p className="text-sm text-slate-600 bg-slate-50 p-3 rounded-md italic">
-                    "{selectedPackage.notes}"
-                  </p>
+
+              {/* Additional Information */}
+              {(selectedPackage.tbmt_code || selectedPackage.participant_count) && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {selectedPackage.tbmt_code && (
+                    <div>
+                      <label className="text-sm font-medium text-gray-600">Mã TBMT</label>
+                      <p className="text-sm font-medium">{selectedPackage.tbmt_code}</p>
+                    </div>
+                  )}
+                  {selectedPackage.participant_count && (
+                    <div>
+                      <label className="text-sm font-medium text-gray-600">Số lượng nhà thầu</label>
+                      <p className="text-sm font-medium">{selectedPackage.participant_count}</p>
+                    </div>
+                  )}
                 </div>
               )}
-              
-              <div className="flex justify-end">
+
+              {/* Timeline Information */}
+              {(selectedPackage.start_date || selectedPackage.end_date) && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {selectedPackage.start_date && (
+                    <div>
+                      <label className="text-sm font-medium text-gray-600">Ngày bắt đầu</label>
+                      <p className="text-sm font-medium">{selectedPackage.start_date}</p>
+                    </div>
+                  )}
+                  {selectedPackage.end_date && (
+                    <div>
+                      <label className="text-sm font-medium text-gray-600">Ngày kết thúc</label>
+                      <p className="text-sm font-medium">{selectedPackage.end_date}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Actions */}
+              <div className="flex items-center justify-end gap-2 pt-4 border-t">
                 <Button variant="outline" onClick={onCloseDetailsModal}>
                   Đóng
                 </Button>
+                <Button variant="outline" onClick={() => {
+                  onCloseDetailsModal()
+                  // TODO: Show edit modal
+                }}>
+                  <Edit className="w-4 h-4 mr-2" />
+                  Chỉnh sửa
+                </Button>
+                <Button variant="outline" onClick={() => {
+                  onCloseDetailsModal()
+                  // TODO: Show documents modal
+                }}>
+                  <FolderOpen className="w-4 h-4 mr-2" />
+                  Tài liệu
+                </Button>
+                {selectedPackage.status === 'draft' && (
+                  <Button>
+                    <Send className="w-4 h-4 mr-2" />
+                    Công bố
+                  </Button>
+                )}
+                {selectedPackage.status === 'published' && (
+                  <Button>
+                    <Award className="w-4 h-4 mr-2" />
+                    Trao thầu
+                  </Button>
+                )}
               </div>
             </div>
           )}
@@ -454,34 +406,37 @@ export function BiddingModals({
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Package className="w-5 h-5" />
+              <Download className="w-5 h-5" />
               Xuất dữ liệu gói thầu
             </DialogTitle>
           </DialogHeader>
-          
+
           <div className="space-y-4">
-            <p className="text-sm text-slate-600">
-              Chọn định dạng xuất dữ liệu gói thầu:
-            </p>
-            
-            <div className="space-y-3">
-              <Button className="w-full justify-start" variant="outline">
-                <FileText className="w-4 h-4 mr-2" />
-                Excel (.xlsx)
-              </Button>
-              <Button className="w-full justify-start" variant="outline">
-                <FileText className="w-4 h-4 mr-2" />
-                CSV (.csv)
-              </Button>
-              <Button className="w-full justify-start" variant="outline">
-                <FileText className="w-4 h-4 mr-2" />
-                PDF (.pdf)
-              </Button>
+            <div>
+              <label className="text-sm font-medium">Định dạng xuất</label>
+              <select className="w-full p-2 border border-gray-300 rounded-md mt-1">
+                <option value="excel">Excel (.xlsx)</option>
+                <option value="pdf">PDF (.pdf)</option>
+                <option value="csv">CSV (.csv)</option>
+              </select>
             </div>
-            
-            <div className="flex justify-end gap-3">
+
+            <div>
+              <label className="text-sm font-medium">Phạm vi dữ liệu</label>
+              <select className="w-full p-2 border border-gray-300 rounded-md mt-1">
+                <option value="all">Tất cả gói thầu</option>
+                <option value="current_year">Năm hiện tại</option>
+                <option value="selected">Đã chọn</option>
+              </select>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-4">
               <Button variant="outline" onClick={onCloseExportModal}>
                 Hủy
+              </Button>
+              <Button>
+                <Download className="w-4 h-4 mr-2" />
+                Xuất dữ liệu
               </Button>
             </div>
           </div>

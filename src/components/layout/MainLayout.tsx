@@ -5,6 +5,7 @@ import { Sidebar } from "@/components/layout/Sidebar"
 import { DashboardPage } from "@/components/pages/Dashboard/DashboardPage"
 import { ProjectListPage } from "@/components/pages/Projects/ProjectListPage"
 import { BiddingPage } from "@/components/pages/Bidding/BiddingPage"
+import { ContractPage } from "@/components/pages/Contract/ContractPage"
 import { useProjects } from "@/hooks/useProjects"
 import { calculateDashboardStats } from "@/lib/utils"
 
@@ -127,12 +128,7 @@ export function MainLayout() {
       case "bidding-packages":
         return <BiddingPage />
       case "contracts":
-        return (
-          <div className="text-center py-20">
-            <h2 className="text-2xl font-bold text-slate-700 mb-4">Hợp đồng</h2>
-            <p className="text-slate-600">Chức năng quản lý hợp đồng đang được phát triển...</p>
-          </div>
-        )
+        return <ContractPage />
       case "costs":
         return (
           <div className="text-center py-20">
